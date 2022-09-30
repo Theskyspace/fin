@@ -1,12 +1,18 @@
-import 'package:flutter/cupertino.dart';
+import 'dart:math';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
 
-class TXN_BLOCK extends StatelessWidget {
-  TXN_BLOCK(this.title, this.amount, {Key? key}) : super(key: key);
-  String title;
-  int amount;
+class TxnBlock extends StatelessWidget {
+  TxnBlock(this.title, this.amount, {Key? key}) : super(key: key);
+  final String title;
+  final int amount;
+
+  List colorList = [
+    Colors.amber[200],
+    Colors.green[200],
+    Colors.blue[200],
+    Colors.purple[200],
+    Colors.red[200],
+  ];
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -18,18 +24,20 @@ class TXN_BLOCK extends StatelessWidget {
             height: 45,
             width: 45,
             decoration: BoxDecoration(
-              color: Colors.grey,
+              color: colorList[Random().nextInt(colorList.length)],
               borderRadius: BorderRadius.circular(10),
             ),
           ),
           Text(
             title,
-            style: TextStyle(fontSize: 20),
+            style: const TextStyle(fontSize: 20),
           ),
           const Spacer(
             flex: 1,
           ),
-          Text("₹ $amount", style: TextStyle(fontSize: 20))
+          Text("₹ $amount",
+              style: const TextStyle(
+                  fontSize: 20, color: Color.fromARGB(255, 118, 8, 1)))
         ],
       ),
     );

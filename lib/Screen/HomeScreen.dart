@@ -1,17 +1,11 @@
-import 'dart:developer';
-
+import 'package:flutter/material.dart';
+import 'package:sqflite/sqflite.dart';
+// InApp imports
 import 'package:fin/Screen/QRScreen.dart';
+import 'package:fin/theme/app_colors.dart';
 import 'package:fin/Screen/txn_block.dart';
 import 'package:fin/helper/database_helper.dart';
-import 'package:fin/theme/app_colors.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:mobile_scanner/mobile_scanner.dart';
-import 'package:sqflite/sqflite.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -26,7 +20,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
     transactions = DatabaseHelper.instance.queryAll();
     super.initState();
   }
@@ -218,19 +211,23 @@ class _HomeScreenState extends State<HomeScreen> {
                   const SizedBox(
                     height: 15,
                   ),
-                  Container(
-                    height: 200,
+                  SizedBox(
+                    height: 270,
                     child: FutureBuilder<List<Map<String, dynamic>>?>(
                         future: transactions,
                         builder: (context, snapshot) {
                           if (snapshot.hasData) {
                             return ListView.builder(
+                                physics: const BouncingScrollPhysics(),
                                 scrollDirection: Axis.vertical,
-                                itemCount: snapshot.data?.length,
+                                itemCount: 5,
                                 itemBuilder: (context, index) {
-                                  return TXN_BLOCK(
-                                      snapshot.data![index]["title"],
-                                      snapshot.data![index]["amount"]);
+                                  int items = snapshot.data?.length ?? 0;
+                                  return TxnBlock(
+                                      snapshot.data![items - index - 1]
+                                          ["title"],
+                                      snapshot.data![items - index - 1]
+                                          ["amount"]);
                                 });
                           } else {
                             return const Text("hello");
@@ -243,15 +240,22 @@ class _HomeScreenState extends State<HomeScreen> {
             const Spacer(
               flex: 1,
             ),
-            FloatingActionButton(
-                heroTag: "btnQR",
-                onPressed: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => QRexample(),
-                    ),
-                  );
-                }),
+            Container(
+              margin: const EdgeInsets.symmetric(vertical: 20),
+              child: IconButton(
+                  // heroTag: "btnQR",
+                  icon: const Icon(
+                    Icons.qr_code,
+                    size: 40,
+                  ),
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => QRexample(),
+                      ),
+                    );
+                  }),
+            ),
           ],
         ),
       ),
